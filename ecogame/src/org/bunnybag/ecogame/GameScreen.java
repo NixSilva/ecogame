@@ -10,14 +10,14 @@ public class GameScreen implements Screen {
 	
 	public GameScreen(Game game) {
 		this.game = game;
-		this.world = new World(50, 50);
+		this.world = new World(32, 32);
 	}
 
 	@Override
 	public void render(float delta) {
 		world.update(delta);
 		world.render();
-		//System.out.println(1.0f/ delta);
+		System.out.println(1.0f / delta);
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class WorldRenderer {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		Tile[][] tiles = world.get_tiles();
+		Tile[][] tiles = world.getTiles();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		for(Tile[] row : tiles) {
@@ -52,7 +52,7 @@ public class WorldRenderer {
 		
 		shapes.setProjectionMatrix(camera.combined);
 		shapes.begin(ShapeType.Filled);
-		for(Tile[] row : world.get_tiles()) {
+		for(Tile[] row : tiles) {
 			for (Tile tile : row) {
 				tile.drawShape(shapes);
 			}
