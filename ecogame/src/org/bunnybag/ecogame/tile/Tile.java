@@ -1,4 +1,6 @@
-package org.bunnybag.ecogame;
+package org.bunnybag.ecogame.tile;
+
+import org.bunnybag.ecogame.World;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,21 +11,23 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Tile {
-	//private TileType type;
 	private boolean is_spring;
 	private int x, y;
 	private int width, height;
-	private float length;
+	private static float length = 0.05f;
 	private float water;
 	private static Sprite sprite;
 	private Tile[] neighbors;
 	private Tile[][] tiles;
+	protected float leak_water;
+	protected float max_water;
+	protected float min_water;
+	protected float loss_water;
 
 	public Tile(int i, int j, World world) {
 		is_spring = false;
 		x = i;
 		y = j;
-		length = 0.05f;
 		water = 0;
 		neighbors = new Tile[4];
 		tiles = world.getTiles();
@@ -37,9 +41,9 @@ public class Tile {
 		
 		if (sprite == null)
 		{
-			Texture texture = new Texture(Gdx.files.internal("texture/test.png"));
+			Texture texture = new Texture(Gdx.files.internal("texture/dirt1024.jpg"));
 			texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-			TextureRegion region = new TextureRegion(texture, 0, 0, 128, 128);
+			TextureRegion region = new TextureRegion(texture, 0, 0, 1024, 1024);
 			sprite = new Sprite(region);
 			sprite.setSize(length, length);
 			sprite.setOrigin(length/2, length/2);
@@ -56,6 +60,10 @@ public class Tile {
 	public boolean getSpring() { return is_spring; }
 	public void setWater(float newWater) { water = newWater; }
 	public float getWater() { return water; }
+	public void incWater(float inc) { water += inc; }
+	public float getLeakWater() { return leak_water; }
+	public float getX() { return x; }
+	public float getY() { return y; }
 	
 	public void drawSprite(SpriteBatch batch) {
 		sprite.setSize(length, length);
@@ -67,21 +75,26 @@ public class Tile {
 		float colorX = water * 1.0f;
 		float colorY = water * 1.0f;
 		shapes.setColor(0.0f, colorX, colorY, 1.0f);
-		shapes.rect(x*length-length/2, y*length-length/2, length, length);
+		//shapes.rect(x*length-length/2, y*length-length/2, length, length);
+		shapes.rect(x*length, y*length, length, length);
 	}
 	
 	public void update(float deltaTime) {
 		for (Tile tile: neighbors) {
 			if (tile != null) {
-				float nw = tile.getWater();
-				float dw = water - nw;
-				water -= dw * deltaTime;
-				tile.setWater(nw + dw * deltaTime);
+				float leakage = leak_water * tile.getLeakWater();
+				float dw = (water - tile.getWater()) * deltaTime * leakage;
+				water -= dw;
+				tile.incWater(dw);
 			}
 		}
-		water -= deltaTime * 0.1f;
-		if (water < 0.0f) water = 0.0f;
-		if (water > 1.0f) water = 1.0f;
-		if (is_spring) water = 1.0f;
+		water -= deltaTime * loss_water * water;
+		if (water < min_water) water = min_water;
+		if (water > max_water) water = max_water;
 	}
+
+	public static float getLength() {
+		return length;
+	}
+
 }

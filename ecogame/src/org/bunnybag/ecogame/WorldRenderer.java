@@ -1,5 +1,8 @@
 package org.bunnybag.ecogame;
 
+import org.bunnybag.ecogame.life.Life;
+import org.bunnybag.ecogame.tile.Tile;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -41,6 +44,7 @@ public class WorldRenderer {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		Tile[][] tiles = world.getTiles();
+		/*
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		for(Tile[] row : tiles) {
@@ -49,6 +53,7 @@ public class WorldRenderer {
 			}
 		}
 		batch.end();
+		*/
 		
 		shapes.setProjectionMatrix(camera.combined);
 		shapes.begin(ShapeType.Filled);
@@ -57,7 +62,18 @@ public class WorldRenderer {
 				tile.drawShape(shapes);
 			}
 		}
+		for(Life life: world.getLives()) {
+			life.drawShape(shapes);
+		}
 		shapes.end();
+		
+		/*
+		shapes.begin(ShapeType.Line);
+		for(Life life: world.getLives()) {
+			life.drawLinkage(shapes);
+		}
+		shapes.end();
+		*/
 	}
 
 	public void resize(int width, int height) {
