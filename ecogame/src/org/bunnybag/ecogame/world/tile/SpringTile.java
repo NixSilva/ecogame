@@ -1,6 +1,6 @@
-package org.bunnybag.ecogame.tile;
+package org.bunnybag.ecogame.world.tile;
 
-import org.bunnybag.ecogame.World;
+import org.bunnybag.ecogame.world.World;
 
 public class SpringTile extends Tile{
 

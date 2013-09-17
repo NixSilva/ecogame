@@ -1,6 +1,10 @@
-package org.bunnybag.ecogame.tile;
+package org.bunnybag.ecogame.world.tile;
 
-import org.bunnybag.ecogame.World;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bunnybag.ecogame.world.World;
+import org.bunnybag.ecogame.world.life.Life;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Tile {
-	private boolean is_spring;
 	private int x, y;
 	private int width, height;
 	private static float length = 0.05f;
@@ -19,17 +22,20 @@ public class Tile {
 	private static Sprite sprite;
 	private Tile[] neighbors;
 	private Tile[][] tiles;
+	private Set<Life> lives;
 	protected float leak_water;
 	protected float max_water;
 	protected float min_water;
 	protected float loss_water;
+	protected float fertile;
 
 	public Tile(int i, int j, World world) {
-		is_spring = false;
 		x = i;
 		y = j;
-		water = 0;
+		water = 0.0f;
+		fertile = 0.0f;
 		neighbors = new Tile[4];
+		lives = new HashSet<Life>();
 		tiles = world.getTiles();
 		width = world.getWidth();
 		height = world.getHeight();
@@ -51,19 +57,15 @@ public class Tile {
 
 	}
 	
-	public void setSpring(boolean spring) {
-		is_spring = spring;
-		if (is_spring) {
-			water = 1.0f;
-		}
-	}
-	public boolean getSpring() { return is_spring; }
 	public void setWater(float newWater) { water = newWater; }
-	public float getWater() { return water; }
 	public void incWater(float inc) { water += inc; }
+	public void incFertile(float inc) { fertile += inc; }
+	public float getWater() { return water; }
 	public float getLeakWater() { return leak_water; }
 	public float getX() { return x; }
 	public float getY() { return y; }
+	public Set<Life> getLives() { return lives; }
+
 	
 	public void drawSprite(SpriteBatch batch) {
 		sprite.setSize(length, length);
@@ -96,5 +98,6 @@ public class Tile {
 	public static float getLength() {
 		return length;
 	}
+
 
 }

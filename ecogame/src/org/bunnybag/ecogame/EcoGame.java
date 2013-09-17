@@ -1,11 +1,13 @@
 package org.bunnybag.ecogame;
 
+import org.bunnybag.ecogame.mainmenuscreen.MainMenuScreen;
+
 import com.badlogic.gdx.Game;
 
 public class EcoGame extends Game {
 	@Override
 	public void create() {
-		setScreen(new GameScreen(this));
+		setScreen(new MainMenuScreen(this));
 	}
 
 	@Override

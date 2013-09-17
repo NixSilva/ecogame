@@ -1,18 +1,18 @@
-package org.bunnybag.ecogame;
+package org.bunnybag.ecogame.gamescreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
-public class CameraController implements GestureListener {
+public class GameController implements GestureListener {
 	OrthographicCamera camera;
 	int w;
 	int h;
 	float old_zoom;
 	boolean zooming;
 	
-	public CameraController(OrthographicCamera camera) {
+	public GameController(OrthographicCamera camera) {
 		this.camera = camera;
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();

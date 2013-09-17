@@ -1,7 +1,7 @@
-package org.bunnybag.ecogame;
+package org.bunnybag.ecogame.world;
 
-import org.bunnybag.ecogame.life.Life;
-import org.bunnybag.ecogame.tile.Tile;
+import org.bunnybag.ecogame.world.life.Life;
+import org.bunnybag.ecogame.world.tile.Tile;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector3;
 
 public class WorldRenderer {
 	
@@ -19,8 +19,6 @@ public class WorldRenderer {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private ShapeRenderer shapes;
-	private CameraController controller;
-	private GestureDetector detector;
 
 	public WorldRenderer(World world) {
 		this.world = world;
@@ -30,14 +28,14 @@ public class WorldRenderer {
 		
 		
 		camera = new OrthographicCamera(1, h/w);
-		controller = new CameraController(camera);
-		detector = new GestureDetector(controller);
-		Gdx.input.setInputProcessor(detector);
+		float max_x = world.getMaxX();
+		float max_y = world.getMaxY();
+		camera.position.set(max_x / 2, max_y / 2, 0.0f);
 		shapes = new ShapeRenderer();
 		batch = new SpriteBatch();
 	}
 	
-	public OrthographicCamera get_camera() { return camera; };
+	public OrthographicCamera getCamera() { return camera; };
 
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -77,11 +75,14 @@ public class WorldRenderer {
 	}
 
 	public void resize(int width, int height) {
-		if (width > height)
+		Vector3 old_position = camera.position.cpy();
+		if (width > height) {
 			camera.setToOrtho(false, 1.0f, (float)height/width);
-		else
+		}
+		else {
 			camera.setToOrtho(false, (float)width/height, 1.0f);
-		camera.position.set(0.0f, 0.0f, 0.0f);
+		}
+		camera.position.set(old_position);
 		camera.update();
 	}
 
